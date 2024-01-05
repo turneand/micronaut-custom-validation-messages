@@ -27,8 +27,18 @@ import java.util.stream.Collectors;
 class ValidatorTest {
 	@Inject Validator validator;
 
+    /**
+	 * Expectation here is that we have an object, with three properties, all set to "null"
+	 * we have the standard @NotNull annotation set on all fields, so we expect the standard violation message returned for each field
+	 * "car" and "truck" also have a custom annotation added with a message dynamically set in the Validator
+	 * and "bike" has a custom annotation added with a message read from the annotation
+	 *
+	 * We expect 6 constraint violations to be returned, however, due to disableDefaultConstraintViolation not being reset between
+	 * each test, we actually only end up with 3: [car: FromValidator, truck: FromValidator, car: must not be null].
+	 */
 	@Test
 	void testAllNullValues() {
+		
 		var results = validator.validate(new ValueObject(null, null, null));
 		var violations =  results.stream().map(x -> x.getPropertyPath() + ": " + x.getMessage()).collect(Collectors.toSet());
 		var expected = Set.of("bike: must not be null", "car: must not be null", "truck: must not be null",
