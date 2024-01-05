@@ -1,0 +1,2 @@
+A simple project to demonstrate what is believed to be a bug in the micronaut-validation codebase.
+Where the disableDefaultConstraintViolation is not reset between each validation, so we miss out on some violations.
